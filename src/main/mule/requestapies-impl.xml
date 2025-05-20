@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<http:request-config name="HTTP_Request_configuration" doc:name="HTTP Request configuration" doc:id="18a74bc7-d637-4b5c-a0a4-c4318c35c4a6" >
+		<http:request-connection protocol="HTTPS" host="${httpsRequest.host}" port="${httpsRequest.port}" />
+	</http:request-config>
+	<flow name="requestapies-implFlow" doc:id="5b605b44-eea6-43d2-b9c5-0192d2bf26ba" >
+		<logger level="INFO" doc:name="Logger" doc:id="da9cb3a1-c507-4da2-9a0d-60313f0e0d61" message='#["request sent"]'/>
+		<http:request method="GET" doc:name="Request" doc:id="be8b0562-4638-45dc-956d-f74d435ed568" config-ref="HTTP_Request_configuration" path="${httpsRequest.path}">
+			<http:query-params ><![CDATA[#[output application/java
+---
+{
+	"id" : attributes.queryParams.id
+}]]]></http:query-params>
+		</http:request>
+		<logger level="INFO" doc:name="Logger" doc:id="66ea0936-1fce-4b2f-b241-04484c79934f" message='#["response recived"]'/>
+		<ee:transform doc:name="Transform Message" doc:id="f1fcc749-85ac-4c92-9c63-4c5be0076ad9" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</flow>
+	<flow name="requestapies-impl-urifetch" doc:id="5a1047cf-2e62-42f9-a7ac-5e307a7bd6c5" >
+		<logger level="INFO" doc:name="Logger" doc:id="f0d628dd-c953-4e8a-a22c-0729d0243b4c" message='#["request sent"]'/>
+		<http:request method="GET" doc:name="Request" doc:id="7f53d586-c50a-462d-b1bd-7e44c2544dbb" config-ref="HTTP_Request_configuration" path="/posts/{idValue}">
+			<http:uri-params ><![CDATA[#[output application/java
+---
+{
+	"idValue" : attributes.uriParams.idValue
+}]]]></http:uri-params>
+		</http:request>
+		<logger level="INFO" doc:name="Logger" doc:id="bce8fcdb-f394-4514-8726-f12377fdd5da" message='#["response recived"]'/>
+		<ee:transform doc:name="Transform Message" doc:id="becb4561-8f20-4985-b110-1382574431d7" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</flow>
+</mule>
