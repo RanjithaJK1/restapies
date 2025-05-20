@@ -1,0 +1,33 @@
+#%RAML 1.0
+title: requestapies
+baseUri: http://localhost:8081
+
+/request:
+  get:
+    queryParameters:
+      id:
+        description:  ID of the employee
+        type: string
+        required: true
+    responses:
+      200:
+        body:
+          application/json:
+            example: !include apiResponse.json
+/{idValue}:
+  get:
+    responses:
+      200:
+        body:
+          application/json:
+            example: !include apiResponse.json
+              
+  
+  
+    
+      
+              
+
+
+          
+    

@@ -1,0 +1,11 @@
+httpListner: 
+    port: "8081"
+ 
+ 
+httpsRequest:
+    port: "443"
+    host: "jsonplaceholder.typicode.com"
+    path: "/users"
+ 
+
+ 
